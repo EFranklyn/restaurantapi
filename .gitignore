@@ -1,2 +1,4 @@
 venv/
 .idea/
+db.sqlite3
+restaurantapi/__pycache__/
