@@ -24,7 +24,7 @@ class Recipe(TimesMixin, models.Model):
     details = models.TextField(verbose_name='Detalhes da Receita')
     ingredients = models.TextField(verbose_name='Ingredientes')
     method_of_preparation = models.TextField(default='', verbose_name='Modo de Preparo')
-    time = models.IntegerField(verbose_name='Pcdreparo (em minutos)')
+    time = models.IntegerField(verbose_name='Preparo (em minutos)')
     chef = models.ForeignKey(Chef, on_delete=models.PROTECT, verbose_name='Chefe da receita')
     group = models.ForeignKey(GroupRecipe, on_delete=models.PROTECT, verbose_name='Grupo de receitas')
 
