@@ -4,8 +4,8 @@ from chef.models import Chef
 
 
 class ChefAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    list_display_links = ('name',)
+    list_display = ('id', 'name',)
+    list_display_links = ('id',)
     list_filter = ('name',)
     search_fields = ('name',)
     list_editable = ('name',)

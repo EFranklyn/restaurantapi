@@ -14,8 +14,15 @@ class TimesMixin(models.Model):
 
 class GroupRecipe(TimesMixin, models.Model):
 
-    name = models.CharField(max_length=50, verbose_name='Dome do grupo')
+    name = models.CharField(max_length=50, verbose_name='nome do grupo')
     details = models.TextField(verbose_name='Detalhes do grupo de receitas')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Grupo de receita'
+        verbose_name_plural = 'Grupos de receita'
 
 
 class Recipe(TimesMixin, models.Model):
@@ -27,6 +34,9 @@ class Recipe(TimesMixin, models.Model):
     time = models.IntegerField(verbose_name='Preparo (em minutos)')
     chef = models.ForeignKey(Chef, on_delete=models.PROTECT, verbose_name='Chefe da receita')
     group = models.ForeignKey(GroupRecipe, on_delete=models.PROTECT, verbose_name='Grupo de receitas')
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = 'Receita'
