@@ -1,9 +1,30 @@
 from rest_framework import serializers
-from recipe.models import Recipe
+
+from chef.models import Chef
+from chef.serializers import ChefSerializers
+from recipe.models import Recipe, GroupRecipe
+
+
+class GroupRecipeSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupRecipe
+        fields = (
+            'id',
+            'name',)
 
 
 class RecipeSerializers(serializers.ModelSerializer):
+
+    chef = ChefSerializers(read_only=True)
+    chef_put = serializers.PrimaryKeyRelatedField(queryset=Chef.objects.all(),
+                                                  write_only=True, source='chef')
+
+    # chef_create = serializers.PrimaryKeyRelatedField(queryset=Chef.objects.all(),
+    #                                                  write_only=True, source='chef')
+
     class Meta:
+
         model = Recipe
         fields = (
             'id',
@@ -13,4 +34,5 @@ class RecipeSerializers(serializers.ModelSerializer):
             'method_of_preparation',
             'time',
             'chef',
+            'chef_put',
             'group')

@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from recipe.models import Recipe
-from recipe.serializers import RecipeSerializers
+from recipe.models import Recipe, GroupRecipe
+from recipe.serializers import RecipeSerializers, GroupRecipeSerializers
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -14,4 +14,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
                          'delete']
 
 
+class GroupRecipeViewSet(viewsets.ModelViewSet):
 
+    serializer_class = GroupRecipeSerializers
+    queryset = GroupRecipe.objects.all()
+    http_method_names = ['get',
+                         'post',
+                         'put',
+                         'options',
+                         'delete']
