@@ -37,11 +37,3 @@ class RecipeSerializers(serializers.ModelSerializer):
             'chef_put',
             'group',
             'group_put')
-
-
-# class RecipeSerializers(serializers.ModelSerializer):
-#     class Meta:
-#         model = GroupRecipe
-#         fields = (
-#             'id',
-#             'name',)
