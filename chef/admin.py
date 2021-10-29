@@ -4,8 +4,11 @@ from chef.models import Chef
 
 
 class ChefAdmin(admin.ModelAdmin):
-    #Chef
-    pass
+    list_display = ('id', 'name',)
+    list_display_links = ('id',)
+    list_filter = ('name',)
+    search_fields = ('name',)
+    list_editable = ('name',)
 
 
-admin.site.register(Chef)
+admin.site.register(Chef, ChefAdmin)
