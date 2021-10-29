@@ -19,9 +19,9 @@ class RecipeSerializers(serializers.ModelSerializer):
     chef = ChefSerializers(read_only=True)
     chef_put = serializers.PrimaryKeyRelatedField(queryset=Chef.objects.all(),
                                                   write_only=True, source='chef')
-
-    # chef_create = serializers.PrimaryKeyRelatedField(queryset=Chef.objects.all(),
-    #                                                  write_only=True, source='chef')
+    group = GroupRecipeSerializers(read_only=True)
+    group_put = serializers.PrimaryKeyRelatedField(queryset=GroupRecipe.objects.all(),
+                                                   write_only=True, source='group')
 
     class Meta:
 
@@ -35,4 +35,13 @@ class RecipeSerializers(serializers.ModelSerializer):
             'time',
             'chef',
             'chef_put',
-            'group')
+            'group',
+            'group_put')
+
+
+# class RecipeSerializers(serializers.ModelSerializer):
+#     class Meta:
+#         model = GroupRecipe
+#         fields = (
+#             'id',
+#             'name',)

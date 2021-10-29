@@ -7,5 +7,5 @@ router = routers.DefaultRouter()
 router.register('', ChefViewSet)  # router name
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/chefs/', include(router.urls)),
 ]
