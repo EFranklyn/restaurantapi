@@ -1,6 +1,8 @@
+"""recipe app routes"""
+
+
 from django.urls import path, include
 from rest_framework import routers
-from chef.api import ChefViewSet
 from recipe.api import RecipeViewSet, GroupRecipeViewSet, SearchRecipes
 
 app_name = 'recipe'

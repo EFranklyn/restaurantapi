@@ -4,6 +4,7 @@ from chef.models import Chef
 
 
 class ChefAdmin(admin.ModelAdmin):
+    """class responsible for customizing the model in admin"""
     list_display = ('id', 'name',)
     list_display_links = ('id',)
     list_filter = ('name',)

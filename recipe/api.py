@@ -1,15 +1,11 @@
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView
-
 from recipe.models import Recipe, GroupRecipe
 from recipe.serializers import RecipeSerializers, GroupRecipeSerializers
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    """Endpoint used to list, create and delete recipes,
-    to list specific recipes use /id(pk)
-    example:
-    api/recipes/id"""
+    """Endpoint used to list, create and delete recipes."""
 
     serializer_class = RecipeSerializers
     queryset = Recipe.objects.all()
@@ -21,10 +17,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class GroupRecipeViewSet(viewsets.ModelViewSet):
-    """Endpoint used to list, create and delete recipes,
-        to list specific groups use /id(pk)
-        example:
-        api/groups/id"""
+    """Endpoint used to list, create and delete Groups."""
     serializer_class = GroupRecipeSerializers
     queryset = GroupRecipe.objects.all()
     http_method_names = ['get',
@@ -35,14 +28,16 @@ class GroupRecipeViewSet(viewsets.ModelViewSet):
 
 
 class SearchRecipes(ListAPIView):
-    """Endpoint used to list recipes,
+    """
+    Class of endpoint used to list recipes,
     to list specific recipes use the parameter search.
-    search parameters:
-    recipe name: name
-    chef name: chefname
-    group name:groupname
-    example:
-    api/searchrecipes/?name=value"""
+    Args:
+        name (str): recipe name
+        chefname (str): name chef
+        groupname (str): name group
+    return:
+        SearchRecipes: queryset
+    """
 
     serializer_class = RecipeSerializers
 

@@ -9,7 +9,13 @@ client = Client()
 
 
 def params_search(chefname='', name='', groupname=''):
-    """chefname,name,groupname"""
+    """function used to return parameters for searchrecipes
+    Args:
+        chefname (str): Value for search in chefname.
+        name (str): value for search in name.
+        groupname (str): value for search in groupname
+    Returns:
+        params_search(dict): dict with values"""
     return {'chefname': chefname, 'name': name, 'groupname': ''}
 
 
@@ -116,23 +122,26 @@ class RecipeTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_get_search_recipe_no_param(self):
-        """Test all searcherecipes param name"""
+        """Test all searchrecipes"""
         response = client.get(self.URLSEARCHRECIPES, params_search(), HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_search_recipe_param_name(self):
+        """Test searchrecipes param recipe name"""
         response = client.get(self.URLSEARCHRECIPES, params_search(name=self.escondidinho.name[5: 10]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(dict(response.data[0]).get('name'), self.escondidinho.name)
 
     def test_get_search_recipe_param_chef_name(self):
+        """Test searchrecipes param chef name"""
         response = client.get(self.URLSEARCHRECIPES, params_search(chefname=self.Ernane.name[0:5]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(dict(response.data[0]).get('chef').get('name'), self.Ernane.name)
 
     def test_get_search_recipe_param_group_name(self):
+        """Test searchrecipes param group name"""
         response = client.get(self.URLSEARCHRECIPES, params_search(groupname=self.escondidinho.name[0: 5]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -144,6 +153,7 @@ class RecipeTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_specify_group(self):
+        """Test get specify group"""
         response = client.get(self.URLGROUPS + str(self.pratos_de_domingo.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         group = GroupRecipe.objects.get(pk=self.pratos_de_domingo.pk)

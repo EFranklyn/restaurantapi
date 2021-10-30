@@ -6,7 +6,7 @@ from recipe.models import Recipe, GroupRecipe
 
 
 class GroupRecipeSerializers(serializers.ModelSerializer):
-
+    """Serializer to Model GroupRecipe"""
     class Meta:
         model = GroupRecipe
         fields = (
@@ -15,7 +15,7 @@ class GroupRecipeSerializers(serializers.ModelSerializer):
 
 
 class RecipeSerializers(serializers.ModelSerializer):
-
+    """Serializer to Model Recipe"""
     chef = ChefSerializers(read_only=True)
     chef_put = serializers.PrimaryKeyRelatedField(queryset=Chef.objects.all(),
                                                   write_only=True, source='chef')
