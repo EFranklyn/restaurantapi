@@ -10,8 +10,8 @@ router_groups = routers.DefaultRouter()
 router_groups.register('api/groups', GroupRecipeViewSet)
 
 urlpatterns = [
-    path('', include(router_recipes.urls)),
-    path('', include(router_groups.urls)),
-    path('api/searchrecipes/', SearchRecipes.as_view()),
+    path('', include(router_recipes.urls), name='recipes'),
+    path('', include(router_groups.urls), name='groups'),
+    path('api/searchrecipes/', SearchRecipes.as_view(), name='searchrecipes'),
 ]
 
