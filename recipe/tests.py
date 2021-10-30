@@ -1,5 +1,6 @@
 import json
 
+from django.conf.urls import url
 from django.test import TestCase, Client
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -12,165 +13,117 @@ from recipe.serializers import RecipeSerializers
 client = Client()
 
 
+def params_search(chefname='', name='', groupname=''):
+    """chefname,name,groupname"""
+    return {'chefname':chefname,'name':name,'groupname':''}
+
+
 class RecipeTestCase(TestCase):
-    """Class for test the functionalities of the api"""
+    """Tests for Recipes """
     def setUp(self):
-        self.gordon = Chef.objects.create(name='Ernane')
-        self.jacquin = Chef.objects.create(name='Leandra')
-        self.sobremesas = GroupRecipe.objects.create(name='sobremesas')
+        self.URLRECIPES = '/api/recipes/'
+        self.SEARCHRECIPES = '/api/searchrecipes/'
+        self.Ernane = Chef.objects.create(name='Ernane')
         self.pratos_de_domingo = GroupRecipe.objects.create(name='Pratos de domingo')
 
-        self.feijoada = Recipe.objects.create(
-            name='Feijoada',
-            short_description='A feijoada é um prato típico do Rio de Janeiro e é muito consumido em todo Brasil.',
-            ingredients='1 Kg de feijão preto, 100 g de carne seca, 70 g de orelha de porco, 70 g de rabo de porco...',
-            method='Coloque as carnes de molho por 36 horas ou mais, vá trocando a água várias vezes...',
-            difficulty=1,
-            chef=self.gordon,
-            time=60
+        self.Leandra = Chef.objects.create(name='Leandra')
+        self.sobremesas = GroupRecipe.objects.create(name='sobremesas')
+
+        self.escondidinho = Recipe.objects.create(
+            name='Escondidinho de carne ',
+            details='Escondinho de carne com purê de mandioca',
+            ingredients='3 Kg de carne seca, 800g de mandioca',
+            method_of_preparation='Coloque a carne e a mandioca depois leve ao forno ...',
+            time=50,
+            chef=self.Ernane,
+            group=self.pratos_de_domingo
         )
-        self.strogonoff = Recipe.objects.create(
-            name='Strogonoff de camarão',
-            short_description='Sirva com arroz e batata palha, palito ou chips',
-            ingredients='500 gramas de camarão cinza ou rosa, 1 colher de sobremesa rasa de margarina, 1 lata...',
-            method='Limpe os camarões tirando a cabeça e a tripa., Coloque em uma panela a manteiga.',
-            difficulty=1,
-            chef=self.jacquin,
-            time=50
+        self.canjica = Recipe.objects.create(
+            name='Canjica ',
+            details='Deliciosa canjica com run',
+            ingredients='15 mls de run, quatro latas de leite condençado, canjica',
+            method_of_preparation='cozinhe a canjica e adicione o leite condensado e o run',
+            time=50,
+            chef=self.Leandra,
+            group=self.sobremesas
         )
+
         self.valid = {
-            'name': 'Feijoada',
-            'short_description': 'Comida tipica brasileira',
-            'ingredients': '1 Kg de feijão preto, 100 g de carne seca, 70 g de orelha de porco, 70 g de rabo de porco',
-            'method': 'Coloque as carnes de molho por 36 horas ou mais, vá trocando a água várias vezes',
-            'difficulty': 1,
-            'chef': 1,
-            'time': 60
-        }
-        self.invalid = {
-            'name': '',
-            'short_description': 'Comida tipica brasileira',
-            'ingredients': '1 Kg de feijão preto, 100 g de carne seca, 70 g de orelha de porco, 70 g de rabo de porco',
-            'method': 'Coloque as carnes de molho por 36 horas ou mais, vá trocando a água várias vezes',
-            'difficulty': 1,
-            'chef': 1,
-            'time': 60
+            "name":'Escondidinho de carne',
+            "details":'Escondinho de carne com purê de mandioca',
+            "ingredients":'3 Kg de carne seca, 800g de mandioca',
+            "method_of_preparation":'Coloque a carne e a mandioca depois leve ao forno ...',
+            "time":50,
+            "chef":1,
+            "chef_put":1,
+            "group":1,
+            "group_put":1
         }
 
-        self.chef = {'name': 'Douglas'}
+        self.invalid = {
+            'name':'',
+            'details':'Deliciosa canjica com run',
+            'ingredients':'15 mls de run, quatro latas de leite condençado, canjica',
+            'method_of_preparation':'cozinhe a canjica e adicione o leite condensado e o run',
+            'time':50,
+            'chef':1,
+            'group':None
+
+        }
+
+        self.chef = {'name': 'Ernane'}
 
     def test_create_recipe(self):
-        """Testing the creation of a recipe"""
-        response = client.post(reverse('create_recipe'), self.valid)
+        """Test create recipe"""
+        response = client.post('/api/recipes/', self.valid)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_get_single_recipe(self):
-        """Testing the retrieve of information from a single recipe"""
-        response = client.get(reverse('detail_recipe', kwargs={'pk': self.feijoada.pk}))
-
-        recipe = Recipe.objects.get(pk=self.feijoada.pk)
-        serializer = RecipeSerializer(recipe)
-        self.assertEqual(response.data, serializer.data)
+    def test_get_recipes(self):
+        """Test get recipes"""
+        response = client.get(self.URLRECIPES)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_get_recipe(self):
+        """Test get recipe"""
+        response = client.get(self.URLRECIPES + str(self.escondidinho.pk) + '/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        recipe = Recipe.objects.get(pk=self.escondidinho.pk)
+        serializer = RecipeSerializers(recipe)
+        self.assertEqual(response.data, serializer.data)
+
+
     def test_valid_update_recipe(self):
-        """Testing update from a valid information"""
+        """Test update"""
         response = client.put(
-            reverse(
-                'detail_recipe',
-                kwargs={'pk': self.feijoada.pk}
-            ),
+            self.URLRECIPES + str(self.escondidinho.pk) + '/',
             json.dumps(self.valid),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        recipe = Recipe.objects.get(pk=self.escondidinho.pk)
+        self.assertEqual(recipe.chef.pk, self.valid.get('chef'))
+        self.assertEqual(recipe.group.pk, self.valid.get('group'))
 
     def test_invalid_update_recipe(self):
-        """Testing update from a invalid information"""
+        """test update false data"""
         response = client.put(
-            reverse(
-                'detail_recipe',
-                kwargs={'pk': self.feijoada.pk}
-            ),
+            self.URLRECIPES + str(self.escondidinho.pk) + '/',
             json.dumps(self.invalid),
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_recipe(self):
-        """Testing the deletion of a recipe"""
-        response = client.delete(reverse('detail_recipe', kwargs={'pk': self.feijoada.pk}))
+        """Test delete"""
+        response = client.delete(self.URLRECIPES + str(self.escondidinho.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_get_all_recipes(self):
+    def test_get_search_recipes(self):
         """Testing the retrieve of all recipes"""
-        response = client.get(
-            reverse('search_recipes'),
-            {'name': '', 'difficulty': ''},
-            HTTP_ACCEPT='application/json'
-        )
-
-        recipes = Recipe.objects.all().order_by('created')
-
-        serializer = RecipeSerializer(recipes, many=True)
-        self.assertEqual(response.data, serializer.data)
+        response = client.get(self.SEARCHRECIPES, params_search(), HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_filter_recipes_by_name(self):
-        """Testing the retrieve of recipes filtered by name"""
-        response = client.get(
-            reverse('search_recipes'), {'name': 'f'}, HTTP_ACCEPT='application/json')
-
-        recipes = Recipe.objects.filter(
-            name__icontains='f'
-        ).order_by('created')
-
-        serializer = RecipeSerializer(recipes, many=True)
-        self.assertEqual(response.data, serializer.data)
+        response = client.get(self.SEARCHRECIPES, {'name': self.escondidinho.name[5: 10]},
+                              HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_filter_recipes_by_difficulty(self):
-        """Testing the retrieve of recipes filtered by difficulty"""
-        response = client.get(
-            reverse('search_recipes'), {'difficulty': '1'}, HTTP_ACCEPT='application/json')
-
-        recipes = Recipe.objects.filter(
-            difficulty__icontains='1'
-        ).order_by('created')
-
-        serializer = RecipeSerializer(recipes, many=True)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_filter_recipes_by_chef(self):
-        """Testing the retrieve of recipes filtered by chef name"""
-        response = client.get(reverse('search_recipes'), {'chef': 'Gordon'}, HTTP_ACCEPT='application/json')
-
-        recipes = Recipe.objects.filter(chef__name__icontains='Gordon').order_by('created')
-
-        serializer = RecipeSerializer(recipes, many=True)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_filter_recipes_by_name_and_difficulty(self):
-        """Testing the retrieve of recipes filtered by name, difficulty and chef"""
-        response = client.get(
-            reverse('search_recipes'),
-            {'name': 'f', 'difficulty': '1', 'chef': 'Jacquin'},
-            HTTP_ACCEPT='application/json'
-        )
-
-        recipes = Recipe.objects.filter(
-            name__icontains='f',
-            difficulty__icontains='1',
-            chef__name__icontains='Jacquin'
-        ).order_by('created')
-
-        serializer = RecipeSerializer(recipes, many=True)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_create_chef(self):
-        """Testing the creation of a chef"""
-        response = client.post(reverse('create_chef'), json.dumps(self.chef), content_type='application/json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
