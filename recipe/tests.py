@@ -1,21 +1,16 @@
 import json
-
-from django.conf.urls import url
 from django.test import TestCase, Client
 from rest_framework import status
-from rest_framework.reverse import reverse
-
 from chef.models import Chef
 from recipe.models import Recipe, GroupRecipe
-from recipe.serializers import RecipeSerializers
-
+from recipe.serializers import RecipeSerializers, GroupRecipeSerializers
 
 client = Client()
 
 
 def params_search(chefname='', name='', groupname=''):
     """chefname,name,groupname"""
-    return {'chefname':chefname,'name':name,'groupname':''}
+    return {'chefname': chefname, 'name': name, 'groupname': ''}
 
 
 class RecipeTestCase(TestCase):
@@ -95,7 +90,7 @@ class RecipeTestCase(TestCase):
         self.assertEqual(response.data, serializer.data)
 
     def test_valid_update_recipe(self):
-        """Test update"""
+        """Test update recipe"""
         response = client.put(
             self.URLRECIPES + str(self.escondidinho.pk) + '/',
             json.dumps(self.valid_recipe),
@@ -107,7 +102,7 @@ class RecipeTestCase(TestCase):
         self.assertEqual(recipe.group.pk, self.valid_recipe.get('group'))
 
     def test_invalid_update_recipe(self):
-        """test update false data"""
+        """test update false data recipe"""
         response = client.put(
             self.URLRECIPES + str(self.escondidinho.pk) + '/',
             json.dumps(self.invalid),
@@ -116,26 +111,32 @@ class RecipeTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_recipe(self):
-        """Test delete"""
+        """Test delete recipe"""
         response = client.delete(self.URLRECIPES + str(self.escondidinho.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_get_search_recipes(self):
-        """Test all searcherecipes"""
+    def test_get_search_recipe_no_param(self):
+        """Test all searcherecipes param name"""
         response = client.get(self.URLSEARCHRECIPES, params_search(), HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_get_search_recipe_param_name(self):
         response = client.get(self.URLSEARCHRECIPES, params_search(name=self.escondidinho.name[5: 10]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data[0]).get('name'), self.escondidinho.name)
 
-        response = client.get(self.URLSEARCHRECIPES, params_search(chefname=self.escondidinho.name[0: 5]),
+    def test_get_search_recipe_param_chef_name(self):
+        response = client.get(self.URLSEARCHRECIPES, params_search(chefname=self.Ernane.name[0:5]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data[0]).get('chef').get('name'), self.Ernane.name)
 
+    def test_get_search_recipe_param_group_name(self):
         response = client.get(self.URLSEARCHRECIPES, params_search(groupname=self.escondidinho.name[0: 5]),
                               HTTP_ACCEPT='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(dict(response.data[0]).get('group').get('name'), self.pratos_de_domingo.name)
 
     def test_get_groups(self):
         """test get Groups"""
@@ -145,6 +146,9 @@ class RecipeTestCase(TestCase):
     def test_get_specify_group(self):
         response = client.get(self.URLGROUPS + str(self.pratos_de_domingo.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        group = GroupRecipe.objects.get(pk=self.pratos_de_domingo.pk)
+        serializer = GroupRecipeSerializers(group)
+        self.assertEqual(response.data, serializer.data)
 
     def test_create_group(self):
         """Test create group"""
@@ -171,6 +175,17 @@ class RecipeTestCase(TestCase):
 
         response = client.delete(self.URLGROUPS + str(self.sobremesas.pk) + '/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_opstions_recipes(self):
+        """Test options recipes"""
+        response = client.options(self.URLRECIPES)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_opstions_groups(self):
+        """Test options groups"""
+        response = client.options(self.URLGROUPS)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 
 
