@@ -10,6 +10,9 @@ REST API used to register, edit and delete recipes, search by recipe name chef n
 - Search recipes by recipe name, chef name and group name
 - Using django-rest-swagger for documentation
 
+[![Python Version](https://img.shields.io/badge/python-3.9+-blue.svg)](https://python.org)
+[![Django Version](https://img.shields.io/badge/django-3.2.8-brightgreen.svg)](https://djangoproject.com)
+[![Django Version](https://img.shields.io/badge/django%20REST%20framework-3.2.8-red.svg)](https://www.django-rest-framework.org)
 
 ### Sumary
 
@@ -23,6 +26,9 @@ REST API used to register, edit and delete recipes, search by recipe name chef n
   - [GET](#get)
 
 # Application
+
+![Build Status](https://img.shields.io/badge/Reselease-0.0.1-red.svg)
+
 application developed using Django REST framework. 
 
 ![Build Status](https://www.django-rest-framework.org/img/logo.png)
@@ -49,6 +55,8 @@ _
 - Creating, editing and deleting recipes
 - Search recipes by recipe name, chef name and group name
 - Admin customization
+- Using django-rest-swagger for documentation
+- Test implemantation
 
 The application urls were grouped by app for better organization and tracking,
 so each app has a urls.py file so that all returns from that app
