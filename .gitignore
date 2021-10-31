@@ -6,3 +6,4 @@ chef/__pycache__/
 chef/migrations/__pycache__/
 recipe/__pycache__/
 recipe/migrations/__pycache__/
+static/

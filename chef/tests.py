@@ -3,16 +3,9 @@ from django.test import TestCase, Client
 from rest_framework import status
 from chef.models import Chef
 from chef.serializers import ChefSerializers
-from recipe.models import Recipe, GroupRecipe
-from recipe.serializers import RecipeSerializers
 
 
 client = Client()
-
-
-def params_search(chefname='', name='', groupname=''):
-    """chefname,name,groupname"""
-    return {'chefname': chefname, 'name': name, 'groupname': ''}
 
 
 class ChefTestCase(TestCase):
@@ -26,7 +19,7 @@ class ChefTestCase(TestCase):
         self.invalid_chef = {'name': ''}
 
     def test_get_chefs(self):
-        """Test create recipe"""
+        """Test create chef"""
         response = client.get(self.URLCHEF)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

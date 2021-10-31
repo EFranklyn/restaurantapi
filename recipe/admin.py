@@ -5,6 +5,7 @@ from recipe.models import Recipe, GroupRecipe
 
 
 class RecipeAdmin(admin.ModelAdmin):
+    """class responsible for customizing the model in admin"""
 
     FIELDS_ADMIN = ('id',
                     'name',
@@ -22,6 +23,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
 
 class GroupRecipeAdmin(admin.ModelAdmin):
+    """class responsible for customizing the model in admin"""
 
     FIELDS_ADMIN = (
                     'id',
