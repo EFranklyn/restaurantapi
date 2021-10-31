@@ -1,0 +1,9 @@
+venv/
+.idea/
+db.sqlite3
+restaurantapi/__pycache__/
+chef/__pycache__/
+chef/migrations/__pycache__/
+recipe/__pycache__/
+recipe/migrations/__pycache__/
+static/
