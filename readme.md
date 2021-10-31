@@ -1,9 +1,6 @@
 # Restaurantapi
 ## _quick answer for your restaurant!_
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
 REST API used to register, edit and delete recipes, search by recipe name chef name or recipe group name, your team only cares about serving the food in how much the application provides the data.
 
@@ -28,7 +25,7 @@ REST API used to register, edit and delete recipes, search by recipe name chef n
 # Application
 application developed using Django REST framework. 
 
-[![Build Status](https://www.django-rest-framework.org/img/logo.png)](https://www.django-rest-framework.org/ "![Build Status](https://www.django-rest-framework.org/img/logo.png)")
+![Build Status](https://www.django-rest-framework.org/img/logo.png)
 
 [Django REST framework](https://www.django-rest-framework.org/ "Django REST framework")
 
@@ -86,7 +83,7 @@ recipes, groups and chefs list, create and delete
 to do this, just pass pk(id) as each method has its field structure and must be respected according to the example.
 the searchrecipes endpoint searches by parameters just pass the desired parameters for the search and the results are returned.
 
-## acessando o endpoint é fornecida uma documentação detalhade de todos os endpoints.
+## accessing the endpoint detailed documentation of all endpoints is provided.
 >doc/
 _CODE: 200_
 
