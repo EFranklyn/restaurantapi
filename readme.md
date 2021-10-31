@@ -48,6 +48,7 @@ _
 - Creating, editing and deleting recipe groups
 - Creating, editing and deleting recipes
 - Search recipes by recipe name, chef name and group name
+- Admin customization
 
 The application urls were grouped by app for better organization and tracking,
 so each app has a urls.py file so that all returns from that app
